@@ -16,6 +16,27 @@ export async function GET(
   return Response.json(Post);
 }
 
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const { title, content, published, authorId } = await request.json();
+  const postId = Number(params.id);
+  const Post = await prisma.post.update({
+    where: {
+      id: postId,
+    },
+    data: {
+      title,
+      content,
+      published,
+      authorId,
+    },
+  });
+
+  return Response.json(Post);
+}
+
 export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }
