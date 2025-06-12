@@ -1,19 +1,39 @@
-import prisma from "@/lib/prisma";
+"use client";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Post } from "./types/post";
 
-export default async function Home() {
-  const users = await prisma.user.findMany();
+export default function Home() {
+  const [post, setPost] = useState<Post[]>([]);
+
+  const fetchPost = async () => {
+    try {
+      const res = await axios.get("/api/post");
+      const data = res.data;
+      console.log(data);
+
+      setPost(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPost();
+  }, []);
+
   return (
-    <div className="min-h-screen  flex flex-col items-center justify-center -mt-16">
-      <h1 className="text-4xl font-bold mb-8 font-[family-name:var(--font-geist-sans)] ">
-        Superblog
-      </h1>
-      <ol className="list-decimal list-inside font-[family-name:var(--font-geist-sans)]">
-        {users.map((user) => (
-          <li key={user.id} className="mb-2">
-            {user.name}
-          </li>
+    <main className="flex flex-col justify-center items-center mt-5">
+      <div className="text-2xl font-bold">Hello Next Prisma Blogs</div>
+      <div className="font-bold">Content</div>
+      <hr className="border-2 border-t border-gray-300 my-4 w-2/6" />
+      <div className="flex flex-row">
+        {post.map((item, index) => (
+          <div className="m-2" key={index}>
+            <div>{item.title}</div>
+          </div>
         ))}
-      </ol>
-    </div>
+      </div>
+    </main>
   );
 }
