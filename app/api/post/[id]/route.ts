@@ -6,7 +6,8 @@ export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const postId = Number(params.id);
+  const { id } = await params; // Next 15 must await dynamic API to access its properties
+  const postId = Number(id);
   const Post = await prisma.post.findUnique({
     where: {
       id: postId,
@@ -21,7 +22,8 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   const { title, content, published, authorId } = await request.json();
-  const postId = Number(params.id);
+  const { id } = await params;
+  const postId = Number(id);
   const Post = await prisma.post.update({
     where: {
       id: postId,
@@ -41,7 +43,8 @@ export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const postId = Number(params.id);
+  const { id } = await params;
+  const postId = Number(id);
   const Post = await prisma.post.delete({
     where: {
       id: postId,
