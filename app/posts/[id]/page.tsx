@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 export default async function Post({
   params,
@@ -26,6 +27,7 @@ export default async function Post({
         <div className="prose prose-gray mt-8">
           {post.content || "No content available."}
         </div>
+        <Link href={"/"}>Home</Link>
       </article>
     </div>
   );

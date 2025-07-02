@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Post } from "./types/post";
+import Link from "next/link";
 
 export default function Home() {
   const [post, setPost] = useState<Post[]>([]);
@@ -10,7 +11,6 @@ export default function Home() {
     try {
       const res = await axios.get("/api/post");
       const data = res.data;
-      console.log(data);
 
       setPost(data);
     } catch (error) {
@@ -35,7 +35,12 @@ export default function Home() {
           >
             <div className="font-semibold text-lg">{item.title}</div>
             <div className="flex">
-              <div className="ml-auto btn btn-outline btn-success">View</div>
+              <Link
+                href={`posts/${item.id}`}
+                className="ml-auto btn btn-outline btn-success"
+              >
+                View
+              </Link>
             </div>
           </div>
         ))}
