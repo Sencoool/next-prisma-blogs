@@ -1,4 +1,4 @@
-import Theme from "./theme";
+import Theme from "./Theme";
 import Link from "next/link";
 
 export default function Navbar() {
