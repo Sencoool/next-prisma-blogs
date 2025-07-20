@@ -11,7 +11,7 @@ async function getBlogs(id: number) {
 
     const data = await response.json();
 
-    return data.Post; // access Post object
+    return data.data; // access data object
   } catch (error) {
     console.error("Error fetching blogs: ", error);
     return null; // return null prevent .map error

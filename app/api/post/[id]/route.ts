@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { error } from "console";
 import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
@@ -15,17 +14,17 @@ export async function GET(
       return NextResponse.json({ error: "Invalid Post ID" }, { status: 400 }); // Error if params is a characters
     }
 
-    const Post = await prisma.post.findUnique({
+    const data = await prisma.post.findUnique({
       where: {
         id: postId,
       },
     });
 
-    if (!Post) {
+    if (!data) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 }); // Error if params id not found
     }
 
-    return NextResponse.json({ Post }, { status: 200 });
+    return NextResponse.json({ data }, { status: 200 });
   } catch (error) {
     console.error("Error: ", error);
   }

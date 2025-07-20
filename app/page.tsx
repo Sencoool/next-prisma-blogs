@@ -24,7 +24,12 @@ export default async function homePage() {
   return (
     <main className="flex flex-col justify-center items-center mt-5">
       <div className="text-2xl font-bold">Jira Blogs</div>
-      <div className="font-bold">Content</div>
+      <div>
+        <div className="font-bold">Content</div>
+        <Link href={"/posts/new"} className="font-bold">
+          New blogs
+        </Link>
+      </div>
       <hr className="border-2 border-t my-4 w-2/6" />
       <div className="grid grid-cols-2 gap-4 max-w-4xl w-full px-4">
         {post.length > 0 ? (
