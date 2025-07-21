@@ -14,7 +14,7 @@ export default function Theme() {
   useEffect(() => {
     document.documentElement.setAttribute(
       "data-theme",
-      isdark ? "dark" : "valentine"
+      isdark ? "dark" : "fantasy"
     );
 
     localStorage.setItem("isdark", JSON.stringify(isdark));

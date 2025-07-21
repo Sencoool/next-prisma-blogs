@@ -14,10 +14,10 @@ export async function POST(request: Request) {
   const { title, content, published, authorId } = await request.json();
   const newPost = await prisma.post.create({
     data: {
-      title,
+      title: "Testing RTE",
       content,
-      published,
-      authorId,
+      published: true,
+      authorId: 3,
     },
   });
   return Response.json(newPost);

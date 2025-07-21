@@ -15,7 +15,9 @@
   "dependencies": {
     "@prisma/client": "^6.8.2",
     "@prisma/extension-accelerate": "^2.0.1",
+    "@tiptap/core": "^3.0.7",
     "@tiptap/extension-image": "^3.0.7",
+    "@tiptap/html": "^3.0.7",
     "@tiptap/pm": "^3.0.7",
     "@tiptap/react": "^3.0.7",
     "@tiptap/starter-kit": "^3.0.7",
@@ -32,6 +34,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "prisma": "^6.9.0",
+    "sass": "^1.89.2",
     "tailwindcss": "^4.1.8",
     "tsx": "^4.19.4",
     "typescript": "^5"
