@@ -14,7 +14,7 @@ async function getBlogs() {
     return posts;
   } catch (error) {
     console.error("Error fetching blogs: ", error);
-    return []; // return empty array prevent .map error
+    return []; // return empty array to prevent .map error
   }
 }
 
@@ -25,9 +25,6 @@ export default async function homePage() {
     <main className="flex flex-col justify-center items-center mt-5">
       <div className="text-2xl font-bold">Jira Blogs</div>
       <div className="font-bold">Content</div>
-      <Link href={"/posts/new"} className="font-bold btn btn-info btn-outline">
-        New blogs
-      </Link>
 
       <hr className="border-2 border-t my-4 w-2/6" />
       <div className="grid grid-cols-2 gap-4 max-w-4xl w-full px-4">

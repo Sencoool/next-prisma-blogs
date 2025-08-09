@@ -25,8 +25,8 @@ const Tiptap = () => {
       StarterKit,
       Underline,
       Image.configure({
-        inline: true, // อนุญาตให้รูปภาพอยู่ในบรรทัดเดียวกับข้อความได้
-        allowBase64: true, // รองรับ base64
+        inline: true, // Allow image to be inline with text
+        allowBase64: true, // allow image to be embedded into text formats like JSON
       }),
     ], // Tiptap Extension
     content: "<p>Hello World!</p>", // Placeholder
@@ -45,32 +45,36 @@ const Tiptap = () => {
 
   const saveContent = async () => {
     if (editor) {
-      console.log(editor.getJSON());
+      try {
+        const response = await fetch(`/api/post`, {
+          method: "POST",
+          body: JSON.stringify({
+            content: editor.getJSON(),
+          }),
+        });
+
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
+      return;
     }
-    try {
-      const response = await fetch(`/api/post`, {
-        method: "POST",
-        body: JSON.stringify({
-          content: editor.getJSON(),
-        }),
-      });
-    } catch (error) {}
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []); // แปลง FileList เป็น Array
+    const files = Array.from(event.target.files || []); // Convert FileList into Array
     files.forEach((file) => {
-      // ตรวจสอบประเภทไฟล์ (JPG หรือ PNG)
+      // Checking file type (JPG or PNG)
       if (file.type === "image/jpeg" || file.type === "image/png") {
-        // ตรวจสอบขนาดไฟล์ (จำกัดที่ 10MB)
+        // Checking file size (Max 10MB)
         if (file.size / 1024 / 1024 > 10) {
           alert("ไฟล์รูปภาพต้องมีขนาดไม่เกิน 10MB");
           return;
         }
         const reader = new FileReader();
         reader.onload = (e) => {
-          const src = e.target?.result as string; // แปลงไฟล์เป็น base64
-          editor.chain().focus().setImage({ src }).run(); // แทรกภาพใน editor
+          const src = e.target?.result as string;
+          editor.chain().focus().setImage({ src }).run(); // set image in editor
         };
         reader.readAsDataURL(file);
       } else {
@@ -85,7 +89,7 @@ const Tiptap = () => {
         <div className="flex flex-col w-full p-2">
           <h2>Editor</h2>
           <div className="flex space-x-2 mb-2 border-2 rounded-lg">
-            <div className="relative">
+            <div className="flex relative">
               <button className={`p-2`}>
                 <FaHeading />
               </button>
@@ -145,7 +149,6 @@ const Tiptap = () => {
             >
               <FaListOl />
             </button>
-            {/* ปุ่มสำหรับเลือกหลายไฟล์รูปภาพ */}
             <div className="relative">
               <label htmlFor="image-upload" className="p-2 cursor-pointer">
                 <FaImage />
@@ -154,7 +157,7 @@ const Tiptap = () => {
                 id="image-upload"
                 type="file"
                 accept="image/jpeg,image/png"
-                multiple // อนุญาตให้เลือกหลายไฟล์
+                multiple // allow multiple files
                 onChange={handleImageUpload}
                 className="absolute top-0 left-0 opacity-0 w-full h-full cursor-pointer"
               />

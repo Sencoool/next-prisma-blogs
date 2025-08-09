@@ -18,6 +18,9 @@ export async function GET(
       where: {
         id: postId,
       },
+      include: {
+        author: true, // Include author details
+      },
     });
 
     if (!data) {
@@ -52,16 +55,16 @@ export async function GET(
 //   return Response.json(Post);
 // }
 
-// export async function DELETE(
-//   request: Request,
-//   { params }: { params: { id: string } }
-// ) {
-//   const { id } = await params;
-//   const postId = Number(id);
-//   const Post = await prisma.post.delete({
-//     where: {
-//       id: postId,
-//     },
-//   });
-//   return Response.json({ message: `Delete post id ${postId} complete` });
-// }
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const postId = parseInt(id);
+  await prisma.post.delete({
+    where: {
+      id: postId,
+    },
+  });
+  return Response.json({ message: `Delete post id ${postId} complete` });
+}
