@@ -13,23 +13,26 @@ import {
   FaHeading,
   FaImage,
 } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
-const Tiptap = () => {
+interface TiptapProps {
+  onEditorReady: (editor: any) => void;
+}
+
+export default function Tiptap({ onEditorReady }: TiptapProps) {
   const [headingLevel, setHeadingLevel] = useState<HeadingLevel>(1);
 
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Underline,
       Image.configure({
         inline: true, // Allow image to be inline with text
         allowBase64: true, // allow image to be embedded into text formats like JSON
       }),
     ], // Tiptap Extension
-    content: "<p>Hello World!</p>", // Placeholder
+    content: "",
     editorProps: {
       attributes: {
         class:
@@ -39,27 +42,16 @@ const Tiptap = () => {
     immediatelyRender: false,
   });
 
+  // Notify parent component when editor is ready
+  useEffect(() => {
+    if (editor) {
+      onEditorReady(editor);
+    }
+  }, [editor, onEditorReady]);
+
   if (!editor) {
     return null;
   }
-
-  const saveContent = async () => {
-    if (editor) {
-      try {
-        const response = await fetch(`/api/post`, {
-          method: "POST",
-          body: JSON.stringify({
-            content: editor.getJSON(),
-          }),
-        });
-
-        console.log(response);
-      } catch (error) {
-        console.error(error);
-      }
-      return;
-    }
-  };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []); // Convert FileList into Array
@@ -165,12 +157,7 @@ const Tiptap = () => {
           </div>
           <EditorContent editor={editor} className="border rounded-lg p-2" />
         </div>
-        <button onClick={saveContent} className="btn btn-outline btn-info">
-          Save
-        </button>
       </div>
     </>
   );
-};
-
-export default Tiptap;
+}

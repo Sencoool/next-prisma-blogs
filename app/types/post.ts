@@ -1,7 +1,10 @@
 export type Post = {
   id: number;
+  coverImage: string;
   title: string;
   content: string;
-  authorId: number;
+  author: {
+    name: string;
+  };
   published: boolean;
 };

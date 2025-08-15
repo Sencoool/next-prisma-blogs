@@ -17,7 +17,9 @@ export default function Loading() {
         {/* Content Skeleton */}
         <div className="flex-1 w-full p-6">
           <div className="skeleton h-12 w-full mb-4"></div>
-          <div className="skeleton h-4 w-1/4 mb-2"></div>
+          {/* Skeleton for cover image */}
+          <div className="skeleton h-50 w-full mb-4"></div>
+          <div className="skeleton h-4 w-1/6 mb-2"></div>
           <div className="skeleton h-4 w-1/4 mb-6"></div>
           <hr className="my-6 border-gray-200" />
           <div className="prose lg:prose-xl mx-auto">

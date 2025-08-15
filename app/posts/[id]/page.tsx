@@ -67,7 +67,7 @@ export default async function PostPage({
   const formattedDate = `${month} ${day}, ${year}`;
 
   return (
-    <div className="container mx-auto my-8 shadow-xl rounded-xl p-6 border-2 border-gray-200 dark:border-gray-700">
+    <div className="w-5/6 md:w-full container mx-auto my-8 shadow-xl rounded-xl md:p-6 border-2 border-gray-200 dark:border-gray-700 transition-colors duration-300">
       <div className="flex flex-col md:flex-row">
         {/* TOC */}
         <div className="hidden md:block md:w-1/4 p-6 border-r border-gray-200">
@@ -81,8 +81,13 @@ export default async function PostPage({
 
         {/* Content */}
         <div className="flex-1 w-full p-6">
-          <h1 className="text-4xl font-bold mb-4">{post?.title}</h1>
-          <p className="text-gray-500">Created by {post?.author?.name}</p>
+          <div>
+            <h1 className="text-4xl font-bold mb-4">{post?.title}</h1>
+          </div>
+          <div className="mb-4 border rounded-2xl overflow-hidden shadow-lg">
+            <img src={`/uploads/${post.coverImage}`} alt="" />
+          </div>
+          <p className="text-gray-500">Writing by {post?.author?.name}</p>
           <p className="text-gray-500 mb-6">Published on {formattedDate}</p>
           <hr className="my-6 border-gray-200" />
           <div className="prose lg:prose-xl mx-auto">

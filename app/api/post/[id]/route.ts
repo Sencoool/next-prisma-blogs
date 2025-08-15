@@ -66,5 +66,5 @@ export async function DELETE(
       id: postId,
     },
   });
-  return Response.json({ message: `Delete post id ${postId} complete` });
+  return NextResponse.json({ message: `Delete post id ${postId} complete` });
 }
