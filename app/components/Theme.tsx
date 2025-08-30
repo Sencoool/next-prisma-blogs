@@ -22,7 +22,7 @@ export default function Theme() {
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       aria-label="Toggle Theme"
-      className="theme-controller hover:text-blue-500 cursor-pointer border-2 rounded-xl  p-2"
+      className="theme-controller hover:text-blue-500 cursor-pointer border-2 rounded-xl p-2"
     >
       {theme === "dark" ? (
         // Sun icon
