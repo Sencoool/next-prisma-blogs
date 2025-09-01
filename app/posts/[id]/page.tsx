@@ -116,12 +116,13 @@ export default async function PostPage({
                 <h1 className="text-3xl md:text-4xl font-bold mb-6 leading-tight">
                   {post.title}
                 </h1>
-                <div className="flex items-center space-x-2 text-sm mb-4">
-                  <Link href="/" className="hover:underline">
-                    Home
-                  </Link>
-                  <span>/</span>
-                  <span className="truncate max-w-[200px]">{post.title}</span>
+                <div className="flex items-center breadcrumbs space-x-2 text-sm mb-4">
+                  <ul>
+                    <li>
+                      <Link href="/">Home</Link>
+                    </li>
+                    <li>{post.title}</li>
+                  </ul>
                 </div>
                 <div className="flex flex-wrap items-center gap-4 text-sm mb-6">
                   <div className="flex items-center gap-1">

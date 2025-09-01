@@ -20,6 +20,7 @@ model Post {
   id        Int     @id @default(autoincrement())
   coverImage String @default("default-cover.jpg")
   title     String
+  description String? 
   content   Json // Using Json type for rich text content
   published Boolean @default(false)
   authorId  Int

@@ -19,7 +19,7 @@ export default function Loading() {
 
           {/* Main Content Skeleton */}
           <div className="lg:col-span-9">
-            <article className="rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+            <article className="rounded-lg">
               <div className="p-8 border-b border-gray-200 dark:border-gray-700">
                 {/* Title */}
                 <div className="skeleton h-12 w-3/4 mb-6"></div>
