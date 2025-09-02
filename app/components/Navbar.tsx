@@ -38,7 +38,7 @@ export default function Navbar() {
                   aria-current={active ? "page" : undefined}
                   className={`px-3 py-2 rounded-md transition-colors ${
                     active
-                      ? "text-green-600 dark:text-green-400 font-medium"
+                      ? "text-green-600 dark:text-green-400 bg-green-500/10 font-medium"
                       : "hover:text-green-500"
                   }`}
                 >

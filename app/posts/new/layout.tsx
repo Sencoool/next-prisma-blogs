@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Create New Blogs",
-  description: "A place where you create new blogs",
+  title: "Create New Post | Jirablogs",
+  description: "A place where you create new posts",
 };
 
 export default function EditorLayout({

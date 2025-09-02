@@ -47,7 +47,7 @@ function RecentPost({ post }: { post: Post }) {
           </h2>
           <p className="text-gray-500 mb-2">📝 {post.author.name}</p>
           <p className="text-base text-gray-700 line-clamp-3 mb-4">
-            {post.description || "No description available."}
+            {post.description || "This post has no description yet."}
           </p>
           <div className="card-actions justify-end">
             <Link href={`posts/${post.id}`} className="btn btn-success btn-sm">
@@ -77,7 +77,7 @@ function BlogCard({ post }: { post: Post }) {
         </h4>
         <p className="text-gray-500 text-sm mb-2">📝 {post.author.name}</p>
         <p className="text-gray-700 text-sm line-clamp-2 mb-4">
-          {post.description || "No description available."}
+          {post.description || "This post has no description yet."}
         </p>
         <div className="card-actions justify-end">
           <Link
