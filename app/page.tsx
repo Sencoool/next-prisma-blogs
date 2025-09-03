@@ -1,10 +1,25 @@
 import Link from "next/link";
-import { Post } from "./types/post";
+import { Post, RecommendedPost } from "./types/post";
 
 async function getBlogs() {
   try {
-    const baseUrl = process.env.API_URL || "http://localhost:3000";
-    const response = await fetch(`${baseUrl}/api/post`);
+    const response = await fetch(`${process.env.API_URL}/api/post`, {
+      cache: "no-store",
+    });
+    if (!response.ok)
+      throw new Error(`Failed to fetch posts: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching blogs: ", error);
+    return [];
+  }
+}
+
+async function getRecommendedBlogs() {
+  try {
+    const response = await fetch(`${process.env.API_URL}/api/post/randompost`, {
+      cache: "no-store",
+    });
     if (!response.ok)
       throw new Error(`Failed to fetch posts: ${response.status}`);
     return await response.json();
@@ -33,6 +48,7 @@ function BlogHeader() {
 function RecentPost({ post }: { post: Post }) {
   return (
     <section className="mb-12">
+      <p className="mb-2 font-bold text-2xl text-green-700">Recent Post</p>
       <div className="card lg:card-side bg-base-200 shadow-xl overflow-hidden">
         <figure className="lg:w-2/5 w-full h-64 lg:h-auto">
           <img
@@ -61,9 +77,9 @@ function RecentPost({ post }: { post: Post }) {
 }
 
 // Blog Card
-function BlogCard({ post }: { post: Post }) {
+function BlogCard({ post }: { post: RecommendedPost }) {
   return (
-    <div className="card bg-base-200 shadow-md hover:shadow-xl transition-shadow duration-200 border border-gray-200">
+    <div className="card bg-base-200 shadow-md hover:shadow-xl transition-shadow duration-200">
       <figure className="w-full h-48 overflow-hidden">
         <img
           src={`/uploads/${post.coverImage}`}
@@ -75,7 +91,7 @@ function BlogCard({ post }: { post: Post }) {
         <h4 className="card-title text-lg font-bold text-green-600">
           {post.title}
         </h4>
-        <p className="text-gray-500 text-sm mb-2">📝 {post.author.name}</p>
+        <p className="text-gray-500 text-sm mb-2">📝 {post.name}</p>
         <p className="text-gray-700 text-sm line-clamp-2 mb-4">
           {post.description || "This post has no description yet."}
         </p>
@@ -84,7 +100,7 @@ function BlogCard({ post }: { post: Post }) {
             href={`posts/${post.id}`}
             className="btn btn-outline btn-success btn-sm"
           >
-            View
+            Read
           </Link>
         </div>
       </div>
@@ -93,7 +109,7 @@ function BlogCard({ post }: { post: Post }) {
 }
 
 // Blog Grid Section
-function BlogGrid({ posts }: { posts: Post[] }) {
+function BlogGrid({ posts }: { posts: RecommendedPost[] }) {
   if (posts.length === 0) {
     return (
       <div className="text-center text-gray-500 py-10">No posts available</div>
@@ -101,8 +117,8 @@ function BlogGrid({ posts }: { posts: Post[] }) {
   }
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      {posts.map((post, idx) => (
-        <BlogCard key={post.id || idx} post={post} />
+      {posts.map((post) => (
+        <BlogCard key={post.id} post={post} />
       ))}
     </div>
   );
@@ -110,6 +126,7 @@ function BlogGrid({ posts }: { posts: Post[] }) {
 
 export default async function homePage() {
   const posts: Post[] = await getBlogs();
+  const recommendedPosts: RecommendedPost[] = await getRecommendedBlogs();
 
   return (
     <main className="min-h-screen bg-base-100 py-10 px-2">
@@ -118,15 +135,12 @@ export default async function homePage() {
         {posts.length > 0 && <RecentPost post={posts[0]} />}
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-semibold text-green-700">All Posts</h3>
-            <input
-              type="text"
-              className="input input-bordered w-full max-w-4/6"
-              placeholder="ค้นหาโพสต์..."
-            />
+            <h3 className="text-xl font-bold text-green-700">
+              Recommended Posts for you
+            </h3>
             <hr className="border-2 border-green-500 w-12" />
           </div>
-          <BlogGrid posts={posts.slice(1)} />
+          <BlogGrid posts={recommendedPosts} />
         </section>
       </div>
     </main>

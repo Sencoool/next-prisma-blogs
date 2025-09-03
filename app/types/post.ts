@@ -9,3 +9,13 @@ export type Post = {
   };
   published: boolean;
 };
+
+export type RecommendedPost = {
+  id: number;
+  coverImage: string;
+  title: string;
+  description: string;
+  content: string;
+  name: string;
+  published: boolean;
+};
