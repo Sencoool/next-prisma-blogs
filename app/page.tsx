@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { Post, RecommendedPost } from "./types/post";
 
-async function getBlogs() {
+async function getRecentPost() {
   try {
-    const response = await fetch(`${process.env.API_URL}/api/post`, {
-      cache: "no-store",
+    const response = await fetch(`${process.env.API_URL}/api/post/recentpost`, {
+      next: { revalidate: 3600 },
     });
+
     if (!response.ok)
       throw new Error(`Failed to fetch posts: ${response.status}`);
     return await response.json();
@@ -15,10 +16,10 @@ async function getBlogs() {
   }
 }
 
-async function getRecommendedBlogs() {
+async function getRecommendedPosts() {
   try {
     const response = await fetch(`${process.env.API_URL}/api/post/randompost`, {
-      cache: "no-store",
+      next: { revalidate: 3600 },
     });
     if (!response.ok)
       throw new Error(`Failed to fetch posts: ${response.status}`);
@@ -48,8 +49,8 @@ function BlogHeader() {
 function RecentPost({ post }: { post: Post }) {
   return (
     <section className="mb-12">
-      <p className="mb-2 font-bold text-2xl text-green-700">Recent Post</p>
-      <div className="card lg:card-side bg-base-200 shadow-xl overflow-hidden">
+      <p className="mb-2 font-bold text-2xl text-green-500">Recent Post 🔥</p>
+      <div className="card lg:card-side bg-base-200 shadow-xl hover:shadow-2xl transition-shadow duration-200 overflow-hidden">
         <figure className="lg:w-2/5 w-full h-64 lg:h-auto">
           <img
             src={`/uploads/${post.coverImage}`}
@@ -125,18 +126,18 @@ function BlogGrid({ posts }: { posts: RecommendedPost[] }) {
 }
 
 export default async function homePage() {
-  const posts: Post[] = await getBlogs();
-  const recommendedPosts: RecommendedPost[] = await getRecommendedBlogs();
+  const post: Post = await getRecentPost();
+  const recommendedPosts: RecommendedPost[] = await getRecommendedPosts();
 
   return (
     <main className="min-h-screen bg-base-100 py-10 px-2">
       <div className="max-w-6xl mx-auto">
         <BlogHeader />
-        {posts.length > 0 && <RecentPost post={posts[0]} />}
+        {post && <RecentPost post={post} />}
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-green-700">
-              Recommended Posts for you
+            <h3 className="text-xl font-bold text-green-500">
+              Recommended Posts for you 📔
             </h3>
             <hr className="border-2 border-green-500 w-12" />
           </div>

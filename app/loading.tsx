@@ -11,6 +11,8 @@ export default function Loading() {
 
         {/* Recent Post (highlight) */}
         <section className="mb-12">
+          <div className="skeleton h-10 w-48 mb-3"></div>
+
           <div className="card lg:card-side bg-base-200 shadow-xl overflow-hidden">
             <figure className="lg:w-2/5 w-full h-64 lg:h-auto">
               <div className="skeleton w-full h-full" />
@@ -34,19 +36,13 @@ export default function Loading() {
         <section>
           <div className="flex items-center justify-between mb-6">
             <div className="skeleton h-6 w-28" />
-            <div className="w-full max-w-4/6">
-              <div className="skeleton h-10 w-full" />
-            </div>
             <hr className="border-2 border-green-500 w-12" />
           </div>
 
           {/* Grid of post cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[...Array(6)].map((_, i) => (
-              <div
-                key={i}
-                className="card bg-base-200 shadow-md border border-gray-200"
-              >
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="card bg-base-200">
                 <figure className="w-full h-48 overflow-hidden">
                   <div className="skeleton h-full w-full" />
                 </figure>
