@@ -1,19 +1,31 @@
 import { PrismaClient } from "@prisma/client";
 import { writeFile } from "fs/promises";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 
 const prisma = new PrismaClient();
 
 // Get all post method
-export async function GET() {
+export async function GET(request: NextRequest) {
   // Future: Add limit to this endpoint for pagination
-  // Future: Add sorting to this endpoint
   // Future: Add filtering to this endpoint
   // Future: Add searching to this endpoint
+  const searchParams = request.nextUrl.searchParams;
+  const search = searchParams.get("search");
+
   const data = await prisma.post.findMany({
     include: {
       author: true,
+    },
+    where: {
+      published: true,
+      title: {
+        contains: search || undefined,
+        mode: "insensitive",
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
   return NextResponse.json(data);
@@ -22,9 +34,8 @@ export async function GET() {
 // Create new post method
 
 export async function POST(request: Request) {
-  // const { content } = await request.json();
+  const data = await request.formData(); // Use formData to handle file uploads
 
-  const data = await request.formData();
   const title = data.get("title") as string;
   const postData = data.get("content") as string;
   const published = data.get("published") === "true" ? true : false; // Convert string to boolean
@@ -33,7 +44,7 @@ export async function POST(request: Request) {
   const content = JSON.parse(postData); // Convert string to JSON
 
   const file = coverImage;
-  console.log("File received: ", file);
+  // console.log("File received: ", file);
 
   if (!file) {
     return Response.json({ error: "Cover image is required" }, { status: 400 });
