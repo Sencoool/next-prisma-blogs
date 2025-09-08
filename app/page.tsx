@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Post, RecommendedPost } from "./types/post";
 
-async function getRecentPost() {
+async function getRecentPost(): Promise<Post> {
   try {
     const response = await fetch(`${process.env.API_URL}/api/post/recentpost`, {
       next: { revalidate: 3600 },
@@ -11,12 +11,12 @@ async function getRecentPost() {
       throw new Error(`Failed to fetch posts: ${response.status}`);
     return await response.json();
   } catch (error) {
-    console.error("Error fetching blogs: ", error);
-    return [];
+    console.error("Error fetching recent posts: ", error);
+    return null as unknown as Post;
   }
 }
 
-async function getRecommendedPosts() {
+async function getRecommendedPosts(): Promise<RecommendedPost[]> {
   try {
     const response = await fetch(`${process.env.API_URL}/api/post/randompost`, {
       next: { revalidate: 3600 },
@@ -25,7 +25,7 @@ async function getRecommendedPosts() {
       throw new Error(`Failed to fetch posts: ${response.status}`);
     return await response.json();
   } catch (error) {
-    console.error("Error fetching blogs: ", error);
+    console.error("Error fetching recommended posts: ", error);
     return [];
   }
 }

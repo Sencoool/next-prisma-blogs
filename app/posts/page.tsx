@@ -1,7 +1,7 @@
 import { Post } from "../types/post";
 import SearchBox from "@components/SearchBox";
 import Link from "next/link";
-import Pagination from "../components/Pagination";
+import Pagination from "@components/Pagination";
 
 interface BlogsResponse {
   data: Post[];
@@ -36,7 +36,7 @@ async function getBlogs(
       throw new Error(`Failed to fetch posts: ${response.status}`);
     return await response.json();
   } catch (error) {
-    console.error("Error fetching blogs: ", error);
+    console.error("Error fetching blogs at posts : ", error);
     return { data: [], totalPosts: 0, page: 1, limit: 6, totalPages: 1 };
   }
 }
