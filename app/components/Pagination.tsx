@@ -40,7 +40,7 @@ export default function Pagination({
           className="join-item btn"
           disabled={currentPage >= totalPages} // Disable if on last page
           onClick={
-            () => () => setPage(currentPage + 1) // Prevent going above totalPages
+            () => setPage(currentPage + 1) // Prevent going above totalPages
           }
         >
           »
