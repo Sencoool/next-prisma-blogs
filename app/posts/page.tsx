@@ -1,14 +1,32 @@
 import { Post } from "../types/post";
 import SearchBox from "@components/SearchBox";
 import Link from "next/link";
+import Pagination from "../components/Pagination";
+
+interface BlogsResponse {
+  data: Post[];
+  totalPosts: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
 
 // Function to fetch blogs from the API with optional search parameter
-async function getBlogs(search?: string): Promise<Post[]> {
+async function getBlogs(
+  search?: string,
+  limit: number = 6,
+  page: number = 1
+): Promise<BlogsResponse> {
   try {
-    const url = new URL(`${process.env.API_URL}/api/post?search=${search}`);
+    const url = new URL(
+      `${process.env.API_URL}/api/post?&page=${page}&limit=${limit}`
+    );
     if (search) {
       url.searchParams.set("search", search); // Add search param if it exists
     }
+
+    url.searchParams.set("limit", limit.toString());
+    url.searchParams.set("page", page.toString());
 
     const response = await fetch(url, {
       next: { revalidate: 3600 }, // Revalidate data every hour
@@ -19,7 +37,7 @@ async function getBlogs(search?: string): Promise<Post[]> {
     return await response.json();
   } catch (error) {
     console.error("Error fetching blogs: ", error);
-    return [];
+    return { data: [], totalPosts: 0, page: 1, limit: 6, totalPages: 1 };
   }
 }
 
@@ -75,10 +93,10 @@ function BlogCard({ post }: { post: Post }) {
 export default async function BlogsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ search?: string }>;
+  searchParams: Promise<{ search?: string; page?: number; limit?: number }>;
 }) {
-  const search = (await searchParams).search || "";
-  const blogs: Post[] = await getBlogs(search);
+  const { search, page, limit } = await searchParams;
+  const blogs: BlogsResponse = await getBlogs(search, limit, page);
 
   return (
     <main className="min-h-screen bg-base-100 py-10 px-2">
@@ -89,8 +107,13 @@ export default async function BlogsPage({
             <SearchBox />
             <hr className="border-2 border-green-500 w-12" />
           </div>
-          <BlogGrid posts={blogs} />
+          <BlogGrid posts={blogs.data} />
         </section>
+        <Pagination
+          limit={blogs.limit}
+          page={blogs.page}
+          totalPages={blogs.totalPages}
+        />
       </div>
     </main>
   );

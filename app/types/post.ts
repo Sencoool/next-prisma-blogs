@@ -1,4 +1,4 @@
-export type Post = {
+export interface Post {
   id: number;
   coverImage: string;
   title: string;
@@ -8,9 +8,9 @@ export type Post = {
     name: string;
   };
   published: boolean;
-};
+}
 
-export type RecommendedPost = {
+export interface RecommendedPost {
   id: number;
   coverImage: string;
   title: string;
@@ -18,4 +18,4 @@ export type RecommendedPost = {
   content: string;
   name: string;
   published: boolean;
-};
+}

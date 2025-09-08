@@ -11,11 +11,11 @@ export default function SearchBox({
   const router = useRouter(); // Hook for navigation
   const searchParams = useSearchParams(); // Hook to access current URL search params
 
+  // Update params when search state changes
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString()); // Create a copy of current search params
     if (search) {
       params.set("search", search);
-      console.log("Search params updated: ", params.toString());
     } else {
       params.delete("search");
     }

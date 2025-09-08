@@ -7,32 +7,52 @@ const prisma = new PrismaClient();
 
 // Get all post method
 export async function GET(request: NextRequest) {
-  // Future: Add limit to this endpoint for pagination
-  // Future: Add filtering to this endpoint
-  // Future: Add searching to this endpoint
   const searchParams = request.nextUrl.searchParams;
   const search = searchParams.get("search");
 
+  const page = parseInt(searchParams.get("page") || "1"); // current page
+  const limit = parseInt(searchParams.get("limit") || "1"); // limit items shown per page
+  const skip = (page - 1) * limit; // items to skip ex. page 1 skip 0, page 2 skip 6
+
+  // Build the where clause based on search parameter
+  const where: any = {};
+  if (search) {
+    where.published = true;
+    where.title = {
+      contains: search,
+      mode: "insensitive",
+    };
+  }
+
   const data = await prisma.post.findMany({
+    where: where,
     include: {
-      author: true,
-    },
-    where: {
-      published: true,
-      title: {
-        contains: search || undefined,
-        mode: "insensitive",
+      author: {
+        select: { name: true },
       },
     },
     orderBy: {
       createdAt: "desc",
     },
+    skip: skip,
+    take: limit,
   });
-  return NextResponse.json(data);
+
+  // Get total count of posts for pagination
+  const totalPosts = await prisma.post.count({
+    where: where,
+  });
+
+  return NextResponse.json({
+    data,
+    totalPosts,
+    page,
+    limit,
+    totalPages: Math.ceil(totalPosts / limit) || 1, // Ensure at least 1 page
+  });
 }
 
 // Create new post method
-
 export async function POST(request: Request) {
   const data = await request.formData(); // Use formData to handle file uploads
 
