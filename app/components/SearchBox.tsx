@@ -1,6 +1,6 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function SearchBox({
   defaultValue = "",
@@ -23,14 +23,12 @@ export default function SearchBox({
   }, [search]);
 
   return (
-    <div className="flex">
-      <p className="mr-2 mt-2 ">🔎</p>
-      <input
-        type="text"
-        placeholder="ค้นหาโพสต์..."
-        className="input w-full max-w-xs"
-        onChange={(e) => setSearch(e.target.value)}
-      />
-    </div>
+    <input
+      type="text"
+      className="input input-bordered w-full max-w-xs"
+      placeholder="Search posts..."
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+    />
   );
 }

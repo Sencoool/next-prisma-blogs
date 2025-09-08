@@ -29,7 +29,7 @@ export default function Pagination({
         <button
           className="join-item btn"
           disabled={currentPage <= 1} // Disable if on first page
-          onClick={() => (currentPage > 1 ? setPage(currentPage - 1) : null)} // Prevent going below 1
+          onClick={() => setPage(currentPage - 1)} // Prevent going below 1
         >
           «
         </button>
@@ -40,7 +40,7 @@ export default function Pagination({
           className="join-item btn"
           disabled={currentPage >= totalPages} // Disable if on last page
           onClick={
-            () => (currentPage < totalPages ? setPage(currentPage + 1) : null) // Prevent going above totalPages
+            () => () => setPage(currentPage + 1) // Prevent going above totalPages
           }
         >
           »
