@@ -1,131 +1,253 @@
 "use client";
-import Tiptap from "@components/RichTextEditor";
+
+import { useState, useCallback, useEffect, useRef, FormEvent } from "react";
 import { Editor } from "@tiptap/react";
-import { useRef, useState } from "react";
+import Tiptap from "@components/RichTextEditor";
 import axios from "axios";
 
 export default function NewPost() {
-  const [editorInstance, setEditorInstance] = useState<Editor | null>(null); // State to contain the editor instance
-  const [title, setTitle] = useState<string>("");
-  const [published, setPublished] = useState<boolean>(false);
-  const titleRef = useRef<HTMLInputElement>(null); // Ref to access the title input field
+  // Editor instance (needed to extract JSON content)
+  const [editor, setEditor] = useState<Editor | null>(null);
+
+  // Form fields
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [published, setPublished] = useState(false);
   const [coverImage, setCoverImage] = useState<File | null>(null);
-  const [displayImage, setDisplayImage] = useState<string | null>(null);
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
+  // Preview URL for selected image
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-    if (files) {
-      const image = URL.createObjectURL(files[0]);
-      setCoverImage(files[0]);
-      setDisplayImage(image);
-    }
-  };
+  // UX states
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  const handleSave = async (e: any) => {
+  // Ref (optional) to reset title input quickly
+  const titleRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLInputElement>(null);
+
+  // Cleanup preview URL when component unmounts or image changes
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
+  // Handle image selection + create object URL
+  function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setCoverImage(file);
+    setPreviewUrl(URL.createObjectURL(file));
+  }
+
+  // Basic client-side validation
+  function validate(): string | null {
+    if (!title.trim()) return "Title is required.";
+    if (!editor || editor.isEmpty) return "Content cannot be empty.";
+    if (!coverImage) return "Cover image is required.";
+    return null;
+  }
+
+  // Submit handler
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const content = editorInstance?.getJSON(); // Get the content from RTE in JSON format
+    setErrorMsg(null);
+    setSuccessMsg(null);
 
-    // const payload = {
-    //   title,
-    //   content,
-    //   published,
-    //   coverImage,
-    // };
-
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("coverImage", coverImage as File);
-    formData.append("content", JSON.stringify(content)); // Convert content(JSON) to string
-    formData.append("published", published.toString());
-
-    // check if formData is valid
-    if (!title || !content) {
-      console.log("Title and content are empty");
+    const validationError = validate();
+    if (validationError) {
+      setErrorMsg(validationError);
       return;
     }
 
-    try {
-      const response = await axios.post("/api/post", formData);
-      console.log("Post created successfully", response.data);
-      if (response.status === 201) {
-        console.log("Post created successfully", response.data);
-        titleRef.current!.value = ""; // Clear the title input
-        setTitle("");
-        setPublished(false); // Reset published state
-        setDisplayImage(null); // Reset cover image
-        setCoverImage(null); // Reset file image
-        editorInstance?.commands.clearContent(); // Clear the editor content
-      }
+    const contentJSON = editor?.getJSON();
+    setSubmitting(true);
 
-      // Future: toast notification for success or error
-    } catch (error) {
-      console.error("Error creating post: ", error);
+    try {
+      const formData = new FormData();
+      formData.append("title", title.trim());
+      formData.append("published", String(published));
+      formData.append("description", description.trim());
+      formData.append("content", JSON.stringify(contentJSON));
+      formData.append("coverImage", coverImage as File);
+
+      const res = await axios.post("/api/post", formData);
+
+      if (res.status === 200 || res.status === 201) {
+        setSuccessMsg("Post created successfully.");
+        // Reset form
+        titleRef.current && (titleRef.current.value = "");
+        descriptionRef.current && (descriptionRef.current.value = "");
+        setTitle("");
+        setPublished(false);
+        setDescription("");
+        setCoverImage(null);
+        if (previewUrl) {
+          URL.revokeObjectURL(previewUrl);
+          setPreviewUrl(null);
+        }
+        editor?.commands.clearContent();
+      } else {
+        setErrorMsg(`Unexpected response status: ${res.status}`);
+      }
+    } catch (err: any) {
+      setErrorMsg(
+        err?.response?.data?.error || "Failed to create post. Try again."
+      );
+    } finally {
+      setSubmitting(false);
     }
+  }
+
+  // Manual reset
+  const handleReset = () => {
+    titleRef.current && (titleRef.current.value = "");
+    setTitle("");
+    setPublished(false);
+    descriptionRef.current && (descriptionRef.current.value = "");
+    setDescription("");
+    setCoverImage(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+    }
+    editor?.commands.clearContent();
+    setErrorMsg(null);
+    setSuccessMsg(null);
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 border rounded-lg mt-10">
+    <div className="max-w-2xl mx-auto p-6 border rounded-lg mt-10 bg-base-100 shadow-sm">
       <h1 className="text-2xl font-bold mb-6">Create New Post</h1>
 
+      {/* Feedback messages */}
+      {errorMsg && (
+        <div className="alert alert-error py-2 mb-4 text-sm">{errorMsg}</div>
+      )}
+      {successMsg && (
+        <div className="alert alert-success py-2 mb-4 text-sm">
+          {successMsg}
+        </div>
+      )}
+
       <form
-        onSubmit={handleSave}
-        className="flex flex-col space-y-4"
+        onSubmit={handleSubmit}
         encType="multipart/form-data"
+        className="space-y-6"
+        noValidate
       >
-        <div className="mb-4 p-2">
-          <label className="block text-sm font-medium mb-2">
-            <h2>Title</h2>
+        {/* Title */}
+        <div>
+          <label htmlFor="title" className="block text-sm font-medium mb-2">
+            Title
           </label>
           <input
-            type="text"
-            name="title"
             ref={titleRef}
-            className="w-full p-2 border rounded"
+            id="title"
+            type="text"
+            className="input input-bordered w-full"
             placeholder="Enter post title"
             onChange={(e) => setTitle(e.target.value)}
+            disabled={submitting}
             required
           />
         </div>
-        <div className="mb-4 p-2">
-          <label className="block text-sm font-medium mb-2">
-            <h2>Cover Image</h2>
+
+        {/* Cover Image */}
+        <div>
+          <label
+            htmlFor="coverImage"
+            className="block text-sm font-medium mb-2"
+          >
+            Cover Image (public)
           </label>
           <input
+            id="coverImage"
             type="file"
             name="coverImage"
             className="file-input file-input-bordered w-full max-w-xs"
+            accept="image/*"
             onChange={handleImageUpload}
-            accept="image/*" // Accept only image files
+            disabled={submitting}
             required
+            autoComplete="off"
           />
-
-          {coverImage && (
-            <div className="w-1/2 h-1/2 p-2 border rounded mt-2">
+          {previewUrl && (
+            <div className="mt-3 border rounded-lg overflow-hidden w-full max-h-64">
               <img
-                src={displayImage as string}
+                src={previewUrl}
                 alt="Preview"
-                className="w-full object-fit h-48 rounded"
+                className="w-full h-64 object-cover"
               />
             </div>
           )}
         </div>
-        <Tiptap onEditorReady={setEditorInstance} />
-        <div className="mb-4 p-2">
-          <label className="block text-sm font-medium mb-2">
-            <h2>Published</h2>
+
+        <div>
+          <label htmlFor="title" className="block text-sm font-medium mb-2">
+            Description
           </label>
           <input
-            type="checkbox"
-            name="published"
-            className="checkbox border-red-500 bg-red-500 checked:border-green-500 checked:bg-green-400 checked:text-green-800"
-            onChange={(e) => setPublished(e.target.checked)}
+            ref={descriptionRef}
+            id="description"
+            type="text"
+            className="input input-bordered w-full"
+            placeholder="Enter post description"
+            onChange={(e) => setDescription(e.target.value)}
+            disabled={submitting}
+            required
+            autoComplete="off"
           />
-          <span className="ml-2">Publish status</span>
         </div>
-        <button type="submit" className="btn btn-info">
-          Create Post
-        </button>
+
+        {/* Rich Text Editor */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Content</label>
+          <Tiptap onEditorReady={setEditor} />
+        </div>
+
+        {/* Published toggle */}
+        <div>
+          <span className="block text-sm font-medium mb-2">Published</span>
+          <label className="flex items-center gap-2 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              className="checkbox checkbox-success"
+              checked={published}
+              onChange={(e) => setPublished(e.target.checked)}
+              disabled={submitting}
+            />
+            <span className="text-sm">
+              {published ? "Visible after save" : "Draft mode"}
+            </span>
+          </label>
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center gap-3">
+          <button type="submit" className="btn btn-info" disabled={submitting}>
+            {submitting ? (
+              <span className="loading loading-spinner loading-sm"></span>
+            ) : (
+              "Create Post"
+            )}
+          </button>
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={handleReset}
+            disabled={submitting}
+          >
+            Reset
+          </button>
+        </div>
+
+        <p className="text-xs text-base-content/60">
+          Tip: Optimize large images before upload for faster load times.
+        </p>
       </form>
     </div>
   );
