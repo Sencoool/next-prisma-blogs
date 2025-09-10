@@ -63,7 +63,7 @@ function BlogCard({ post }: { post: Post }) {
     <div className="card bg-base-200 shadow-md hover:shadow-xl transition-shadow duration-200">
       <figure className="w-full h-48 overflow-hidden">
         <img
-          src={`/uploads/${post.coverImage}`}
+          src={`${post.coverImage}`}
           alt={post.title}
           className="object-cover w-full h-full"
         />

@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { writeFile } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
-import path from "path";
+import { put } from "@vercel/blob";
 
 const prisma = new PrismaClient();
 
@@ -62,37 +61,29 @@ export async function GET(request: NextRequest) {
 // Create new post method
 export async function POST(request: Request) {
   try {
-    const data = await request.formData(); // Use formData to handle file uploads
+    const data = await request.formData();
 
     const title = data.get("title") as string;
     const postData = data.get("content") as string;
-    const published = data.get("published") === "true" ? true : false; // Convert string to boolean
+    const published = data.get("published") === "true"; // Convert string to boolean
     const coverImage = data.get("coverImage") as File;
 
-    const content = JSON.parse(postData); // Convert string to JSON
+    const content = JSON.parse(postData);
 
-    const file = coverImage;
-    // console.log("File received: ", file);
-
-    if (!file) {
-      return Response.json(
+    if (!coverImage) {
+      return NextResponse.json(
         { error: "Cover image is required" },
         { status: 400 }
       );
     }
 
-    // Convert the file to a buffer and save it to the public/uploads directory
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    // file upload to Vercel Blob
+    const blob = await put(`coverimage/${coverImage.name}`, coverImage, {
+      access: "public",
+    });
 
-    const oldFileName = path.extname(file.name);
-    const timestamp = Date.now();
-    const newFileName = `${timestamp}${oldFileName}`; // Create a unique filename
-
-    const filePath = path.join(process.cwd(), "public", "uploads", newFileName);
-    await writeFile(filePath, buffer); // Save the file to the uploads directory
-
-    const imageUrl = `${newFileName}`;
+    // blob.url is URL of the uploaded image
+    const imageUrl = blob.url;
 
     const newPost = await prisma.post.create({
       data: {
