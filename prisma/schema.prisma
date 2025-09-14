@@ -7,11 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  READER
+  WRITER
+}
+
 model User {
   id    Int     @id @default(autoincrement())
   email String  @unique
   name  String?
-  // password String
+  passwordHash String?
+  role  Role @default(READER)
   posts Post[] // relations 1 to m with Post
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
