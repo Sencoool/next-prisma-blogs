@@ -38,7 +38,8 @@ function BlogHeader() {
         Jira Blogs
       </h1>
       <p className="text-gray-500 text-lg">
-        All your latest tech stories in one place
+        แหล่งรวมบทความดีๆ
+        เกี่ยวกับการเขียนโปรแกรมและเทคโนโลยีและเรื่องราวของจิรเมธ
       </p>
       <hr className="border-2 border-green-500 w-16 mt-4" />
     </div>
@@ -49,11 +50,11 @@ function BlogHeader() {
 function RecentPost({ post }: { post: Post }) {
   return (
     <section className="mb-12">
-      <p className="mb-2 font-bold text-2xl text-green-500">Recent Post 🔥</p>
+      <p className="mb-2 font-bold text-2xl text-green-500">โพสต์ล่าสุด 🔥</p>
       <div className="card lg:card-side bg-base-200 shadow-xl hover:shadow-2xl transition-shadow duration-200 overflow-hidden">
         <figure className="lg:w-2/5 w-full h-64 lg:h-auto">
           <img
-            src={`/uploads/${post.coverImage}`}
+            src={`${post.coverImage}`}
             alt={post.title}
             className="object-cover w-full h-full"
           />
@@ -64,7 +65,7 @@ function RecentPost({ post }: { post: Post }) {
           </h2>
           <p className="text-gray-500 mb-2">📝 {post.author.name}</p>
           <p className="text-base text-gray-700 line-clamp-3 mb-4">
-            {post.description || "This post has no description yet."}
+            {post.description || "โพสต์นี้ยังไม่มีคำอธิบาย"}
           </p>
           <div className="card-actions justify-end">
             <Link href={`posts/${post.id}`} className="btn btn-success btn-sm">
@@ -83,7 +84,7 @@ function BlogCard({ post }: { post: RecommendedPost }) {
     <div className="card bg-base-200 shadow-md hover:shadow-xl transition-shadow duration-200">
       <figure className="w-full h-48 overflow-hidden">
         <img
-          src={`/uploads/${post.coverImage}`}
+          src={`${post.coverImage}`}
           alt={post.title}
           className="object-cover w-full h-full"
         />
@@ -94,7 +95,7 @@ function BlogCard({ post }: { post: RecommendedPost }) {
         </h4>
         <p className="text-gray-500 text-sm mb-2">📝 {post.name}</p>
         <p className="text-gray-700 text-sm line-clamp-2 mb-4">
-          {post.description || "This post has no description yet."}
+          {post.description || "โพสต์นี้ยังไม่มีคำอธิบาย"}
         </p>
         <div className="card-actions justify-end">
           <Link
@@ -137,7 +138,7 @@ export default async function homePage() {
         <section>
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-bold text-green-500">
-              Recommended Posts for you 📔
+              โพสต์แนะนำสำหรับคุณ 📔
             </h3>
             <hr className="border-2 border-green-500 w-12" />
           </div>

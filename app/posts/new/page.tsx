@@ -121,7 +121,7 @@ export default function NewPost() {
 
   return (
     <div className="max-w-2xl mx-auto p-6 border rounded-lg mt-10 bg-base-100 shadow-sm">
-      <h1 className="text-2xl font-bold mb-6">Create New Post</h1>
+      <h1 className="text-2xl font-bold mb-6">สร้างโพสต์ใหม่</h1>
 
       {/* Feedback messages */}
       {errorMsg && (
@@ -142,14 +142,14 @@ export default function NewPost() {
         {/* Title */}
         <div>
           <label htmlFor="title" className="block text-sm font-medium mb-2">
-            Title
+            ชื่อเรื่อง
           </label>
           <input
             ref={titleRef}
             id="title"
             type="text"
             className="input input-bordered w-full"
-            placeholder="Enter post title"
+            placeholder="เขียนชื่อเรื่องของคุณที่นี่"
             onChange={(e) => setTitle(e.target.value)}
             disabled={submitting}
             required
@@ -162,7 +162,7 @@ export default function NewPost() {
             htmlFor="coverImage"
             className="block text-sm font-medium mb-2"
           >
-            Cover Image (public)
+            รูปหน้าปก (public)
           </label>
           <input
             id="coverImage"
@@ -188,14 +188,14 @@ export default function NewPost() {
 
         <div>
           <label htmlFor="title" className="block text-sm font-medium mb-2">
-            Description
+            คำอธิบาย
           </label>
           <input
             ref={descriptionRef}
             id="description"
             type="text"
             className="input input-bordered w-full"
-            placeholder="Enter post description"
+            placeholder="เขียนคำอธิบายของคุณที่นี่"
             onChange={(e) => setDescription(e.target.value)}
             disabled={submitting}
             required
@@ -205,13 +205,13 @@ export default function NewPost() {
 
         {/* Rich Text Editor */}
         <div>
-          <label className="block text-sm font-medium mb-2">Content</label>
+          <label className="block text-sm font-medium mb-2">เนื้อหา</label>
           <Tiptap onEditorReady={setEditor} />
         </div>
 
         {/* Published toggle */}
         <div>
-          <span className="block text-sm font-medium mb-2">Published</span>
+          <span className="block text-sm font-medium mb-2">เผยแพร่</span>
           <label className="flex items-center gap-2 cursor-pointer select-none">
             <input
               type="checkbox"
@@ -221,7 +221,7 @@ export default function NewPost() {
               disabled={submitting}
             />
             <span className="text-sm">
-              {published ? "Visible after save" : "Draft mode"}
+              {published ? "เผยแพร่หลังจากบันทึก" : "โหมดร่าง"}
             </span>
           </label>
         </div>
@@ -232,7 +232,7 @@ export default function NewPost() {
             {submitting ? (
               <span className="loading loading-spinner loading-sm"></span>
             ) : (
-              "Create Post"
+              "สร้างโพสต์"
             )}
           </button>
           <button
@@ -241,12 +241,13 @@ export default function NewPost() {
             onClick={handleReset}
             disabled={submitting}
           >
-            Reset
+            รีเซ็ตฟอร์ม
           </button>
         </div>
 
         <p className="text-xs text-base-content/60">
-          Tip: Optimize large images before upload for faster load times.
+          Tip:
+          ปรับขนาดรูปภาพขนาดใหญ่ก่อนอัปโหลดเพื่อความเร็วในการโหลดที่เร็วขึ้น
         </p>
       </form>
     </div>

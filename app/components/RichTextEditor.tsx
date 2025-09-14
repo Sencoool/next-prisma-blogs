@@ -225,7 +225,7 @@ export default function Tiptap({
 
       {/* Small helper note */}
       <p className="mt-2 text-xs text-base-content/60">
-        Tip: Use heading levels consistently for a better Table of Contents.
+        Tip: ใช้ระดับหัวข้ออย่างสม่ำเสมอเพื่อสร้างสารบัญที่ดีขึ้น
       </p>
     </div>
   );

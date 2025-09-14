@@ -33,27 +33,29 @@ export async function GET(
   }
 }
 
-// export async function PUT(
-//   request: Request,
-//   { params }: { params: { id: string } }
-// ) {
-//   const { title, content, published, authorId } = await request.json();
-//   const { id } = await params;
-//   const postId = Number(id);
-//   const Post = await prisma.post.update({
-//     where: {
-//       id: postId,
-//     },
-//     data: {
-//       title,
-//       content,
-//       published,
-//       authorId,
-//     },
-//   });
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { title, content, description, published, authorId } =
+    await request.json();
+  const { id } = await params;
+  const postId = Number(id);
+  const Post = await prisma.post.update({
+    where: {
+      id: postId,
+    },
+    data: {
+      title,
+      content,
+      description,
+      published,
+      authorId,
+    },
+  });
 
-//   return Response.json(Post);
-// }
+  return Response.json(Post);
+}
 
 export async function DELETE(
   request: Request,

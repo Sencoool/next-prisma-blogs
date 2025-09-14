@@ -141,7 +141,7 @@ export default async function PostPage({
                 {post.coverImage && (
                   <div className="rounded-lg overflow-hidden shadow-md mb-6">
                     <img
-                      src={`/uploads/${post.coverImage}`}
+                      src={`${post.coverImage}`}
                       alt={post.title}
                       className="w-full h-auto object-cover"
                     />

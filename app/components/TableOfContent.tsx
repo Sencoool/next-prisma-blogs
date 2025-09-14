@@ -19,7 +19,7 @@ export default function TableOfContents({ headings }: { headings: Heading[] }) {
   return (
     <div className="sticky top-8 p-6">
       <h2 className="text-lg font-semibold mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">
-        📑 Table of Contents
+        📑 สารบัญ
       </h2>
       {headings.length > 0 ? (
         <nav className="space-y-2">

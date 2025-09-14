@@ -65,6 +65,7 @@ export async function POST(request: Request) {
 
     const title = data.get("title") as string;
     const postData = data.get("content") as string;
+    const description = data.get("description") as string;
     const published = data.get("published") === "true"; // Convert string to boolean
     const coverImage = data.get("coverImage") as File;
 
@@ -89,6 +90,7 @@ export async function POST(request: Request) {
       data: {
         title,
         content,
+        description,
         published,
         authorId: 3,
         coverImage: imageUrl,
