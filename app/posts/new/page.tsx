@@ -120,7 +120,7 @@ export default function NewPost() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 border rounded-lg mt-10 bg-base-100 shadow-sm">
+    <div className="max-w-2xl mx-auto p-6 mt-10 bg-base-100 shadow-sm">
       <h1 className="text-2xl font-bold mb-6">สร้างโพสต์ใหม่</h1>
 
       {/* Feedback messages */}

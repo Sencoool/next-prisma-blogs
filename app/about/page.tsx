@@ -17,30 +17,30 @@ export default function AboutPage() {
             About Jirablogs
           </h1>
           <p className="mt-3 text-base-content/70 text-lg">
-            A place to share ideas, tutorials, and stories about building for
-            the web.
+            สถานที่แบ่งปันแนวคิด บทเรียน
+            และเรื่องราวเกี่ยวกับการพัฒนาเว็บและโลกของเรา
           </p>
         </header>
 
         {/* Mission / Values */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           <div className="rounded-xl border border-base-300 bg-base-200 p-6">
-            <h3 className="font-semibold text-lg mb-2">Our Mission</h3>
+            <h3 className="font-semibold text-lg mb-2">หน้าที่ของเรา</h3>
             <p className="text-base-content/70">
-              Make learning web development approachable with practical,
-              hands-on content.
+              ให้ความรู้และแรงบันดาลใจแก่ชุมชนการพัฒนาเว็บและโลกของเรา
             </p>
           </div>
           <div className="rounded-xl border border-base-300 bg-base-200 p-6">
-            <h3 className="font-semibold text-lg mb-2">What You’ll Find</h3>
+            <h3 className="font-semibold text-lg mb-2">สิ่งที่คุณจะพบ</h3>
             <p className="text-base-content/70">
-              Articles on web development, tech stack, and more.
+              บทความเกี่ยวกับการพัฒนาเว็บ เทคโนโลยี และอื่นๆ
+              อีกมากมายเกี่ยวกับโลกใบนี้
             </p>
           </div>
           <div className="rounded-xl border border-base-300 bg-base-200 p-6">
-            <h3 className="font-semibold text-lg mb-2">Principles</h3>
+            <h3 className="font-semibold text-lg mb-2">หลักการ</h3>
             <p className="text-base-content/70">
-              Clarity over cleverness. Real-world code.
+              เราเชื่อในการเรียนรู้ตลอดชีวิต
             </p>
           </div>
         </div>
@@ -72,14 +72,12 @@ export default function AboutPage() {
         {/* CTA */}
         <section className="rounded-xl border border-base-300 bg-base-200 p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
-            <h3 className="text-lg font-semibold">Start reading</h3>
-            <p className="text-base-content/70">
-              Dive into the latest posts and tutorials.
-            </p>
+            <h3 className="text-lg font-semibold">เริ่มอ่าน</h3>
+            <p className="text-base-content/70">ดำดิ่งสู่บทความล่าสุด</p>
           </div>
           <div className="flex gap-2">
             <Link href="/" className="btn btn-success btn-sm">
-              Start Reading
+              เริ่มอ่าน
             </Link>
           </div>
         </section>

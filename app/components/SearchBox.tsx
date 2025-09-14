@@ -26,7 +26,7 @@ export default function SearchBox({
     <input
       type="text"
       className="input input-bordered w-full max-w-xs"
-      placeholder="Search posts..."
+      placeholder="ค้นหาโพสต์..."
       value={search}
       onChange={(e) => setSearch(e.target.value)}
     />

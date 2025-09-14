@@ -74,14 +74,14 @@ function BlogCard({ post }: { post: Post }) {
         </h4>
         <p className="text-gray-500 text-sm mb-2">📝 {post.author.name}</p>
         <p className="text-gray-700 text-sm line-clamp-2 mb-4">
-          {post.description || "This post has no description yet."}
+          {post.description || "โพสต์นี้ยังไม่มีคำอธิบาย"}
         </p>
         <div className="card-actions justify-end">
           <Link
             href={`posts/${post.id}`}
             className="btn btn-outline btn-success btn-sm"
           >
-            Read
+            อ่าน
           </Link>
         </div>
       </div>
@@ -103,7 +103,9 @@ export default async function BlogsPage({
       <div className="max-w-6xl mx-auto">
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-green-500">All posts 📚</h3>
+            <h3 className="text-xl font-bold text-green-500">
+              โพสต์ทั้งหมด 📚
+            </h3>
             <SearchBox />
             <hr className="border-2 border-green-500 w-12" />
           </div>
