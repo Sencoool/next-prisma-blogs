@@ -13,9 +13,9 @@ const RegisterSchema = z.object({
     .max(100),
 });
 
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const json = await req.json();
+    const json = await request.json();
     const parsed = RegisterSchema.safeParse(json);
     if (!parsed.success) {
       return NextResponse.json(

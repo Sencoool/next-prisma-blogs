@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import { useEditor, EditorContent, Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline"; // Needed for underline support
@@ -62,58 +62,52 @@ export default function Tiptap({
   }
 
   // Toggle heading (if already active = revert to paragraph)
-  const applyHeading = useCallback(
-    (level: HeadingLevel) => {
-      if (editor.isActive("heading", { level })) {
-        editor.chain().focus().setParagraph().run();
-      } else {
-        editor.chain().focus().toggleHeading({ level }).run();
+  function applyHeading(level: HeadingLevel) {
+    if (!editor) return; // guard: editor can be null on first render
+    if (editor.isActive("heading", { level })) {
+      editor.chain().focus().setParagraph().run();
+    } else {
+      editor.chain().focus().toggleHeading({ level }).run();
+    }
+  }
+
+  // Image upload handler (no useCallback)
+  function handleImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    if (!editor) return; // guard: editor can be null on first render
+    const files = Array.from(event.target.files || []);
+    if (!files.length) return;
+
+    const errors: string[] = [];
+
+    files.forEach((file) => {
+      const isValidType =
+        file.type === "image/jpeg" ||
+        file.type === "image/png" ||
+        file.type === "image/webp";
+      if (!isValidType) {
+        errors.push(`${file.name}: only JPG / PNG / WEBP allowed`);
+        return;
       }
-    },
-    [editor]
-  );
-
-  // Image upload handler
-  const handleImageUpload = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const files = Array.from(event.target.files || []);
-      if (!files.length) return;
-
-      const errors: string[] = [];
-
-      files.forEach((file) => {
-        const isValidType =
-          file.type === "image/jpeg" ||
-          file.type === "image/png" ||
-          file.type === "image/webp";
-
-        if (!isValidType) {
-          errors.push(`${file.name}: only JPG / PNG / WEBP allowed`);
-          return;
-        }
-        const tooLarge = file.size / 1024 / 1024 > 10;
-        if (tooLarge) {
-          errors.push(`${file.name}: exceeds 10MB`);
-          return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const src = e.target?.result as string;
-          editor.chain().focus().setImage({ src, alt: file.name }).run();
-        };
-        reader.readAsDataURL(file);
-      });
-
-      if (errors.length) {
-        alert("Image upload issues:\n" + errors.join("\n"));
+      const tooLarge = file.size / 1024 / 1024 > 10;
+      if (tooLarge) {
+        errors.push(`${file.name}: exceeds 10MB`);
+        return;
       }
 
-      // Reset input value so the same file can be selected again if needed
-      event.target.value = "";
-    },
-    [editor]
-  );
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const src = e.target?.result as string;
+        editor.chain().focus().setImage({ src, alt: file.name }).run();
+      };
+      reader.readAsDataURL(file);
+    });
+
+    if (errors.length) {
+      alert("Image upload issues:\n" + errors.join("\n"));
+    }
+    // Reset so the same file can be selected again
+    event.target.value = "";
+  }
 
   // Helper for toolbar buttons
   const btnClass = (active?: boolean) =>

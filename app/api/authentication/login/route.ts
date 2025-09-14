@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const parsed = LoginSchema.safeParse(body);
+
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Invalid credentials" },

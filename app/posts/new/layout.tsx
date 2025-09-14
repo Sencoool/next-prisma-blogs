@@ -23,7 +23,7 @@ export default async function EditorLayout({
   const token = cookieStore.get("auth_token")?.value;
 
   if (!token) {
-    redirect("/");
+    redirect("/login");
   }
 
   try {
